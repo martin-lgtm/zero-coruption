@@ -1,6 +1,8 @@
 <?php
 
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\PageController;
+
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -44,8 +46,9 @@ Route::get('/map', function () {
             ],
         ],
     ]);
-});
+})->name('map');
 
+Route::get('/about', [PageController::class, 'about'])->name('about');
 
 
 

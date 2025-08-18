@@ -1,29 +1,80 @@
 <template>
-  <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
-    <!-- MAP -->
-    <div id="mk-map" class="h-[70vh] rounded border"></div>
+  <div class="`min-h-screen flex flex-col bg-gradient-to-b from-gray-50 to-gray-100`">
 
-    <!-- RIGHT SIDE: CHART + CARD -->
-    <div class="p-4">
-      <h2 class="text-2xl font-bold mb-2">Случаи на корупција по општини</h2>
-      <div ref="chartEl" class="h-[55vh]"></div>
+    <header class="bg-gray-900 text-white shadow">
+      <div class="max-w-7xl mx-auto px-4 py-3 flex items-center justify-between">
+        <div class="flex items-center gap-3">
+          <img src="../../images/multus.png" class="w-20" alt="">
+          <h1 class="text-xl font-bold tracking-wide">Multus</h1>
+        </div>
+        <nav class="hidden md:flex gap-6 text-sm font-medium">
+          <Link :href="route('map')" class="hover:text-yellow-400 transition">Map</Link>
+          <Link :href="route('about')" class="hover:text-yellow-400 transition">About</Link>
+          <Link href="/contact" class="hover:text-yellow-400 transition">Contact</Link>
+        </nav>
+      </div>
+    </header>
 
-      <div v-if="activeCard" class="mt-6 rounded border p-4 shadow-sm" style="max-width: 640px">
-        <h3 class="text-xl font-extrabold text-center mb-3">{{ activeCard.name }}</h3>
-        <div class="space-y-2 text-sm">
-          <div class="flex justify-between font-semibold border-b pb-1">
-            <span>Вкупно случаи</span>
-            <span>{{ formatNumber(activeCard.total) }}</span>
-          </div>
-          <div v-for="r in activeCard.sectors" :key="r.label" class="flex justify-between">
-            <span>{{ r.label }}</span>
-            <span class="font-semibold">{{ formatNumber(r.value) }}</span>
+    <main class="flex px-4 py-6 lg:py-10">
+      <div class="flex gap-8 w-full">
+
+        <div class="bg-white rounded-xl shadow-lg border flex-1">
+          <div class="p-3">
+            <div id="mk-map" class="h-[66vh] rounded-lg border"></div>
           </div>
         </div>
+
+        <div class="flex-1 flex flex-col space-y-6">
+
+          <div class="text-center">
+            <h2 class="text-3xl font-extrabold text-gray-800">
+              Случаи на корупција по општини
+            </h2>
+            <p class="text-gray-500 text-sm">Визуелизација на податоците по региони и сектори</p>
+          </div>
+
+          <div class="bg-white rounded-xl border p-4 flex w-full">
+            <div ref="chartEl" class="h-[40vh] w-full"></div>
+
+            <div v-if="activeCard" class="bg-white rounded-xl border shadow-lg p-5 hover:shadow-md self-center w-full">
+              <h3 class="text-xl font-bold text-center text-gray-800 mb-4">
+                {{ activeCard.name }}
+              </h3>
+
+              <div class="space-y-3 text-sm text-gray-700">
+                <div class="flex justify-between font-semibold border-b pb-2 text-gray-900">
+                  <span>Вкупно случаи</span>
+                  <span>{{ formatNumber(activeCard.total) }}</span>
+                </div>
+
+                <div v-for="r in activeCard.sectors" :key="r.label"
+                  class="flex justify-between hover:bg-yellow-50 p-1 rounded">
+                  <span>{{ r.label }}</span>
+                  <span class="font-medium text-gray-900">{{ formatNumber(r.value) }}</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+
+
+        </div>
       </div>
-    </div>
+    </main>
+
+    <footer class="bg-gray-900 text-gray-400 mt-8">
+      <div class="max-w-7xl mx-auto px-4 py-6 flex flex-col md:flex-row justify-between items-center text-sm">
+        <p>© 2025 Multus. All rights reserved.</p>
+        <a target="_blank" href="https://www.facebook.com/MultusCentar/">
+          <img src="../../images/facebook.png"  class="w-5" alt="">
+        </a>
+      </div>
+    </footer>
+
   </div>
 </template>
+
+
 
 <script setup>
 import { onMounted, onBeforeUnmount, ref } from 'vue'
@@ -31,8 +82,9 @@ import Highcharts from 'highcharts'
 import 'leaflet/dist/leaflet.css'
 import L from 'leaflet'
 
-import municipalGeoFile from '../maps/mk_municipalities.json' 
+import municipalGeoFile from '../maps/mk_municipalities.json'
 import { corruptionData } from '../data/corruptionData.js'
+import { Link } from '@inertiajs/vue3'
 
 delete L.Icon.Default.prototype._getIconUrl
 
@@ -44,13 +96,13 @@ const NAME_TO_CODE = {
 
 
 function colorForCases(n) {
-  if (n == null) return '#e5e7eb'          // no data
-  if (n === 0) return '#eef2ff'            // 0
-  if (n <= 5) return '#c7d2fe'             // 1–5
-  if (n <= 10) return '#93c5fd'            // 6–10
-  if (n <= 20) return '#60a5fa'            // 11–20
-  if (n <= 40) return '#3b82f6'            // 21–40
-  return '#1d4ed8'                          // >40
+  if (n == null) return '#e5e7eb'
+  if (n === 0) return '#eef2ff'
+  if (n <= 5) return '#c7d2fe'
+  if (n <= 10) return '#93c5fd'
+  if (n <= 20) return '#60a5fa'
+  if (n <= 40) return '#3b82f6'
+  return '#1d4ed8'
 }
 
 const chartEl = ref(null)
@@ -139,32 +191,49 @@ onMounted(() => {
   geoLayer = L.geoJSON(municipalGeo, {
     style: f => baseStyleFor(f.properties?.code),
     onEachFeature: (feature, layer) => {
-      const code = feature.properties?.code
+      const code = feature.properties?.code;
 
+      // Keep base style
       layer.on('mouseover', () => {
-        layer.setStyle(highlightStyleFor(code))
-        layer.bringToFront()
-        const s = seriesFromMunicipality(code)
-        if (s) {
-          activeCard.value = { ...s.data }
-          buildChart(s.series, 'Процент по сектор')
-        } else {
-          activeCard.value = null
-          buildChart([], '')
+        layer.setStyle(highlightStyleFor(code));
+        layer.bringToFront();
+      });
+
+      layer.on('mouseout', () => {
+        // Only revert style if it's not the active selection
+        if (activeCard.value?.code !== code) {
+          layer.setStyle(baseStyleFor(code));
         }
-      })
+      });
 
-      layer.on('mouseout', () => layer.setStyle(baseStyleFor(code)))
+      // Click event: set active selection
+      layer.on('click', () => {
+        // Reset style for all layers first
+        geoLayer.eachLayer(l => l.setStyle(baseStyleFor(l.feature.properties.code)));
 
-      // Tooltip: name + total cases (or “Нема податоци”)
-      const rec = corruptionData[code]
+        // Highlight this one
+        layer.setStyle(highlightStyleFor(code));
+
+        const s = seriesFromMunicipality(code);
+        if (s) {
+          activeCard.value = { ...s.data, code };
+          buildChart(s.series, 'Процент по сектор');
+        } else {
+          activeCard.value = null;
+          buildChart([], '');
+        }
+      });
+
+      // Tooltip: name + total cases
+      const rec = corruptionData[code];
       const tip = rec
         ? `${rec.name}: вкупно ${formatNumber(rec.sectors.reduce((t, x) => t + x.value, 0))} случаи`
-        : (feature.properties?.shapeName || '—') + ': нема податоци'
-      layer.bindTooltip(tip, { sticky: true })
+        : (feature.properties?.shapeName || '—') + ': нема податоци';
+      layer.bindTooltip(tip, { sticky: true });
 
-      layer.on('add', () => layer.getElement()?.classList.add('cursor-pointer'))
-    },
+      layer.on('add', () => layer.getElement()?.classList.add('cursor-pointer'));
+    }
+
   }).addTo(map)
 
   if (geoLayer.getLayers().length) {
@@ -190,6 +259,11 @@ onBeforeUnmount(() => {
 </script>
 
 <style scoped>
-#mk-map { background: #fff; }
-.cursor-pointer { cursor: pointer; }
+#mk-map {
+  background: #fff;
+}
+
+.cursor-pointer {
+  cursor: pointer;
+}
 </style>
