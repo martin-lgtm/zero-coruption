@@ -1,99 +1,169 @@
 <template>
-  <div class="`min-h-screen flex flex-col bg-gradient-to-b from-gray-50 to-gray-100`">
-
+  <div class="min-h-screen flex flex-col bg-gradient-to-b from-gray-50 to-gray-100">
+    <!-- HEADER -->
     <header class="bg-gray-900 text-white shadow">
-      <div class="max-w-7xl mx-auto px-4 py-3 flex items-center justify-between">
+      <div class="max-w-7xl mx-auto px-4 py-4 flex items-center justify-between">
         <div class="flex items-center gap-3">
-          <img src="../../images/multus.png" class="w-20" alt="">
+          <img src="../../images/multus.png" class="w-14 sm:w-16" alt="Multus Logo" />
           <h1 class="text-xl font-bold tracking-wide">Multus</h1>
         </div>
-        <nav class="hidden md:flex gap-6 text-sm font-medium">
-          <Link :href="route('map')" class="hover:text-yellow-400 transition">Map</Link>
-          <Link :href="route('about')" class="hover:text-yellow-400 transition">About</Link>
-          <Link href="/contact" class="hover:text-yellow-400 transition">Contact</Link>
+
+        <button @click="isOpen = !isOpen"
+          class="sm:hidden focus:outline-none focus:ring-2 focus:ring-yellow-400 rounded">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-7 w-7" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path v-if="!isOpen" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+              d="M4 6h16M4 12h16M4 18h16" />
+            <path v-else stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+          </svg>
+        </button>
+
+        <nav class="hidden sm:flex gap-6 text-sm font-medium">
+          <Link :href="route('map')" class="hover:text-yellow-400 transition">Мапа</Link>
+          <Link :href="route('about')" class="hover:text-yellow-400 transition">За нас</Link>
+          <Link href="/report" class="hover:text-yellow-400 transition">Пријави корупција</Link>
         </nav>
+      </div>
+
+      <div v-if="isOpen" class="sm:hidden px-4 pb-4 space-y-2">
+        <Link :href="route('map')" class="block hover:text-yellow-400 transition">Мапа</Link>
+        <Link :href="route('about')" class="block hover:text-yellow-400 transition">За нас</Link>
+        <Link href="/report" class="block hover:text-yellow-400 transition">Пријави корупција</Link>
       </div>
     </header>
 
+    <!-- MAIN -->
     <main class="flex px-4 py-6 lg:py-10">
-      <div class="flex gap-8 w-full">
-
+      <div class="flex flex-col lg:flex-row gap-6 lg:gap-8 w-full">
+        <!-- MAP -->
         <div class="bg-white rounded-xl shadow-lg border flex-1">
           <div class="p-3">
-            <div id="mk-map" class="h-[66vh] rounded-lg border"></div>
+            <div id="mk-map" class="h-[40vh] sm:h-[50vh] lg:h-[66vh] rounded-lg border"></div>
           </div>
         </div>
 
+        <!-- RIGHT PANEL -->
         <div class="flex-1 flex flex-col space-y-6">
-
           <div class="text-center">
-            <h2 class="text-3xl font-extrabold text-gray-800">
+            <h2 class="text-2xl sm:text-3xl font-extrabold text-gray-800">
               Случаи на корупција по општини
             </h2>
             <p class="text-gray-500 text-sm">Визуелизација на податоците по региони и сектори</p>
           </div>
 
-          <div class="bg-white rounded-xl border p-4 flex w-full">
-            <div ref="chartEl" class="h-[40vh] w-full"></div>
+          <div class="bg-white rounded-xl border p-4 flex flex-col lg:flex-row w-full gap-4">
+            <!-- Donut -->
+            <div ref="chartEl" class="h-[30vh] sm:h-[40vh] w-full lg:w-1/2"></div>
 
-            <div v-if="activeCard" class="bg-white rounded-xl border shadow-lg p-5 hover:shadow-md self-center w-full">
-              <h3 class="text-xl font-bold text-center text-gray-800 mb-4">
+            <!-- Card -->
+            <div v-if="activeCard"
+              class="bg-white rounded-xl border shadow-lg p-5 hover:shadow-md self-center w-full lg:w-1/2 max-h-[40vh] overflow-y-auto">
+              <h3 class="text-lg sm:text-xl font-bold text-center text-gray-800 mb-4">
                 {{ activeCard.name }}
               </h3>
 
-              <div class="space-y-3 text-sm text-gray-700">
+              <div class="space-y-4 text-sm text-gray-700">
                 <div class="flex justify-between font-semibold border-b pb-2 text-gray-900">
                   <span>Вкупно случаи</span>
                   <span>{{ formatNumber(activeCard.total) }}</span>
                 </div>
 
-                <div v-for="r in activeCard.sectors" :key="r.label"
-                  class="flex justify-between hover:bg-yellow-50 p-1 rounded">
-                  <span>{{ r.label }}</span>
-                  <span class="font-medium text-gray-900">{{ formatNumber(r.value) }}</span>
+                <!-- Sector list with percentages + comments under each sector -->
+                <div v-for="s in activeCard.sectors" :key="s.label">
+<div class="flex justify-between items-center bg-gray-50 px-2 py-1 rounded border">
+                    <span class="font-semibold text-red-400">{{ s.label }}</span>
+                    <span class="text-gray-700">
+                      {{ formatNumber(s.count) }} • {{ s.pct.toFixed(2) }} %
+                    </span>
+                  </div>
+
+                  <!-- Scrollable comments per sector -->
+                  <ul v-if="s.comments && s.comments.length" class="mt-2 space-y-2 max-h-[250px] overflow-y-auto pr-1">
+                    <li v-for="(c, idx) in s.comments" :key="idx"
+                      class="bg-white border rounded p-2 text-sm text-gray-700">
+                      <div class="flex justify-between text-xs text-gray-500 mb-1">
+                        <span>👤</span>
+                        <span>{{ new Date(c.created_at).toLocaleString('mk-MK') }}</span>
+                      </div>
+                      <p>{{ c.text }}</p>
+                    </li>
+                  </ul>
                 </div>
               </div>
             </div>
+
+            <!-- /Card -->
           </div>
-
-
-
-        </div>
+        </div> <!-- /RIGHT PANEL -->
       </div>
     </main>
 
+    <!-- FOOTER -->
     <footer class="bg-gray-900 text-gray-400 mt-8">
-      <div class="max-w-7xl mx-auto px-4 py-6 flex flex-col md:flex-row justify-between items-center text-sm">
+      <div
+        class="max-w-7xl mx-auto px-4 py-6 flex flex-col md:flex-row justify-between items-center text-sm space-y-2 md:space-y-0">
         <p>© 2025 Multus. All rights reserved.</p>
         <a target="_blank" href="https://www.facebook.com/MultusCentar/">
-          <img src="../../images/facebook.png"  class="w-5" alt="">
+          <img src="../../images/facebook.png" class="w-5" alt="" />
         </a>
       </div>
     </footer>
-
   </div>
 </template>
-
-
 
 <script setup>
 import { onMounted, onBeforeUnmount, ref } from 'vue'
 import Highcharts from 'highcharts'
 import 'leaflet/dist/leaflet.css'
 import L from 'leaflet'
-
 import municipalGeoFile from '../maps/mk_municipalities.json'
-import { corruptionData } from '../data/corruptionData.js'
-import { Link } from '@inertiajs/vue3'
+import { Link, usePage } from '@inertiajs/vue3'
 
+// Fix Leaflet default icon urls under Vite
 delete L.Icon.Default.prototype._getIconUrl
 
+// If your GeoJSON lacks properties.code for some features,
+// we derive it from shapeName here:
 const NAME_TO_CODE = {
   Gevgelija: 'MK-801',
-  Bitola: 'MK-705',
   Bogdanci: 'MK-802',
+  Bosilovo: 'MK-803',
+  Valandovo: 'MK-804',
+  Vasilevo: 'MK-805',
+  Dojran: 'MK-806',
+  Strumica: 'MK-807',
+  Konce: 'MK-808',
+  NovoSelo: 'MK-809',
+  Radovis: 'MK-810',
 }
 
+const isOpen = ref(false)
+const chartEl = ref(null)
+const activeCard = ref(null)
+let chart, map, geoLayer
+
+const page = usePage()
+const municipalities = page.props.municipalities || []
+
+function formatNumber(n) {
+  return new Intl.NumberFormat('mk-MK').format(n)
+}
+
+// Build dataset consumed by the rest of the component
+const corruptionData = Object.fromEntries(
+  municipalities.map(m => {
+    const total = Object.values(m.stats || {}).reduce((a, b) => a + b, 0)
+    const sectors = Object.entries(m.stats || {}).map(([label, count]) => {
+      const pct = total ? (count / total) * 100 : 0
+      // Attach comments for this sector (array) coming from controller
+      const commentsForSector = (m.comments && m.comments[label]) ? m.comments[label] : []
+      return { label, count, pct, comments: commentsForSector }
+    })
+    return [
+      m.key,
+      { name: m.name, total, sectors }
+    ]
+  })
+)
 
 function colorForCases(n) {
   if (n == null) return '#e5e7eb'
@@ -105,52 +175,13 @@ function colorForCases(n) {
   return '#1d4ed8'
 }
 
-const chartEl = ref(null)
-let chart, map, geoLayer
-const activeCard = ref(null)
-
-function formatNumber(n) {
-  return new Intl.NumberFormat('mk-MK').format(n)
-}
-
-// ---- Build donut series for Highcharts from a municipality record ----
 function seriesFromMunicipality(code) {
   const rec = corruptionData[code]
   if (!rec) return null
-  const total = rec.sectors.reduce((s, x) => s + x.value, 0)
-  const pctSeries = rec.sectors.map(x => ({
-    name: x.label,
-    y: total ? (x.value / total) * 100 : 0,
-  }))
-  // What we also want to show in the card:
-  return {
-    title: rec.name,
-    data: { name: rec.name, sectors: rec.sectors, total },
-    series: pctSeries,
-  }
+  const series = rec.sectors.map(s => ({ name: s.label, y: s.pct }))
+  return { title: rec.name, data: rec, series }
 }
 
-// ---- Style from total cases (choropleth) ----
-function totalCases(code) {
-  const rec = corruptionData[code]
-  return rec ? rec.sectors.reduce((s, x) => s + x.value, 0) : null
-}
-
-function baseStyleFor(code) {
-  const n = totalCases(code)
-  return {
-    color: '#ffffff',    // white borders between municipalities
-    weight: 1,
-    fillColor: colorForCases(n),
-    fillOpacity: 0.95,
-  }
-}
-function highlightStyleFor(code) {
-  const s = baseStyleFor(code)
-  return { ...s, weight: 2, fillOpacity: 1 }
-}
-
-// ---- Donut chart ----
 function buildChart(seriesData, title = '') {
   if (!chart) {
     chart = Highcharts.chart(chartEl.value, {
@@ -173,9 +204,21 @@ function buildChart(seriesData, title = '') {
   }
 }
 
-// ---- Mount ----
+function baseStyleFor(code) {
+  const n = corruptionData[code]?.total
+  return {
+    color: '#ffffff',
+    weight: 1,
+    fillColor: colorForCases(n),
+    fillOpacity: 0.95,
+  }
+}
+function highlightStyleFor(code) {
+  return { ...baseStyleFor(code), weight: 2, fillOpacity: 1 }
+}
+
 onMounted(() => {
-  // 1) Ensure every feature has properties.code mapped from shapeName
+  // Ensure each feature has a usable `properties.code`
   const municipalGeo = {
     ...municipalGeoFile,
     features: municipalGeoFile.features.map(f => {
@@ -187,66 +230,64 @@ onMounted(() => {
   map = L.map('mk-map', { zoomControl: true, attributionControl: false })
     .setView([41.6, 21.7], 8)
 
-  // 2) Draw polygons as a corruption choropleth keyed by `code`
   geoLayer = L.geoJSON(municipalGeo, {
-    style: f => baseStyleFor(f.properties?.code),
+    style: f => baseStyleFor(f.properties.code),
     onEachFeature: (feature, layer) => {
-      const code = feature.properties?.code;
+      const code = feature.properties.code
 
-      // Keep base style
+      // Hover effects
       layer.on('mouseover', () => {
-        layer.setStyle(highlightStyleFor(code));
-        layer.bringToFront();
-      });
-
+        layer.setStyle(highlightStyleFor(code))
+        layer.bringToFront()
+      })
       layer.on('mouseout', () => {
-        // Only revert style if it's not the active selection
         if (activeCard.value?.code !== code) {
-          layer.setStyle(baseStyleFor(code));
+          layer.setStyle(baseStyleFor(code))
         }
-      });
+      })
 
-      // Click event: set active selection
+      // Click -> set selection and update donut + card
       layer.on('click', () => {
-        // Reset style for all layers first
-        geoLayer.eachLayer(l => l.setStyle(baseStyleFor(l.feature.properties.code)));
+        geoLayer.eachLayer(l => l.setStyle(baseStyleFor(l.feature.properties.code)))
+        layer.setStyle(highlightStyleFor(code))
 
-        // Highlight this one
-        layer.setStyle(highlightStyleFor(code));
-
-        const s = seriesFromMunicipality(code);
+        const s = seriesFromMunicipality(code)
         if (s) {
-          activeCard.value = { ...s.data, code };
-          buildChart(s.series, 'Процент по сектор');
+          activeCard.value = { ...s.data, code }
+          buildChart(s.series, 'Процент по сектор')
         } else {
-          activeCard.value = null;
-          buildChart([], '');
+          activeCard.value = null
+          buildChart([], '')
         }
-      });
+      })
 
-      // Tooltip: name + total cases
-      const rec = corruptionData[code];
-      const tip = rec
-        ? `${rec.name}: вкупно ${formatNumber(rec.sectors.reduce((t, x) => t + x.value, 0))} случаи`
-        : (feature.properties?.shapeName || '—') + ': нема податоци';
-      layer.bindTooltip(tip, { sticky: true });
+      // Tooltip
+      const rec = corruptionData[code]
+      const tip = rec ? `${rec.name}: ${formatNumber(rec.total)} случаи` : 'Нема податоци'
+      layer.bindTooltip(tip, { sticky: true })
 
-      layer.on('add', () => layer.getElement()?.classList.add('cursor-pointer'));
-    }
-
+      layer.on('add', () => layer.getElement()?.classList.add('cursor-pointer'))
+    },
   }).addTo(map)
 
+  // Fit + initial selection (prefer MK-801 if present)
   if (geoLayer.getLayers().length) {
     map.fitBounds(geoLayer.getBounds(), { padding: [20, 20] })
   }
   map.whenReady(() => map.invalidateSize())
 
-  // 3) Initial selection (Gevgelija if present)
-  const initialCode = 'MK-801'
-  const init = seriesFromMunicipality(initialCode)
+  const codesWithData = Object.keys(corruptionData)
+  const initialCode = codesWithData.includes('MK-801') ? 'MK-801' : codesWithData[0]
+  const init = initialCode ? seriesFromMunicipality(initialCode) : null
   if (init) {
-    activeCard.value = { ...init.data }
+    activeCard.value = { ...init.data, code: initialCode }
     buildChart(init.series, 'Процент по сектор')
+    geoLayer.eachLayer(l => {
+      if (l.feature?.properties?.code === initialCode) {
+        l.setStyle(highlightStyleFor(initialCode))
+        l.bringToFront()
+      }
+    })
   } else {
     buildChart([], '')
   }

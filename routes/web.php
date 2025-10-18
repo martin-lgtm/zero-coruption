@@ -2,10 +2,12 @@
 
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\PageController;
+use App\Http\Controllers\ReportController;
 
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
+use App\Http\Controllers\MapController;
 
 /*
 |--------------------------------------------------------------------------
@@ -23,32 +25,12 @@ Route::get('/test', function () {
 });
 
 
-Route::get('/map', function () {
-    return Inertia::render('MapDashboard', [
-        'title' => 'Пријави по категорија',
-        'municipalities' => [
-            [
-                'key' => 'MK-801',
-                'name' => 'Гевгелија',
-                'stats' => [
-                    'Болница' => 14,
-                    'Полиција' => 5,
-                    'Општина' => 3
-                ]
-            ],
-            [
-                'key' => 'MK-705',
-                'name' => 'Битола',
-                'stats' => [
-                    'Болница' => 9,
-                    'Полиција' => 2
-                ]
-            ],
-        ],
-    ]);
-})->name('map');
+Route::get('/map', [MapController::class, 'index'])->name('map');
+
 
 Route::get('/about', [PageController::class, 'about'])->name('about');
+Route::get('/report', [PageController::class, 'report'])->name('report');
+Route::post('/report', [ReportController::class, 'store'])->name('report.store');
 
 
 
