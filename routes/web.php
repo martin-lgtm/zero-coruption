@@ -29,7 +29,7 @@ Route::get('/map', [MapController::class, 'index'])->name('map');
 
 
 Route::get('/about', [PageController::class, 'about'])->name('about');
-Route::get('/report', [PageController::class, 'report'])->name('report');
+Route::get('/report', [PageController::class, 'report'])->name('report.create');
 Route::post('/report', [ReportController::class, 'store'])->name('report.store');
 
 

@@ -1,0 +1,74 @@
+<?php
+
+namespace Database\Seeders;
+
+use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Schema;
+
+class StaticLookupsSeeder extends Seeder
+{
+    public function run(): void
+    {
+        // In case FKs point to these tables
+        Schema::disableForeignKeyConstraints();
+
+        // --- MUNICIPALITIES ---
+        DB::table('municipalities')->truncate();
+        DB::table('municipalities')->insert([
+            ['id' => 1,  'name' => 'Гевгелија'],
+            ['id' => 2,  'name' => 'Богданци'],
+            ['id' => 3,  'name' => 'Босилово'],
+            ['id' => 4,  'name' => 'Валандово'],
+            ['id' => 5,  'name' => 'Василево'],
+            ['id' => 6,  'name' => 'Дојран'],
+            ['id' => 7,  'name' => 'Конче'],
+            ['id' => 8,  'name' => 'Ново Село'],
+            ['id' => 9,  'name' => 'Радовиш'],
+            ['id' => 10, 'name' => 'Струмица'],
+            // add more if you need them
+        ]);
+
+        // --- SECTORS ---
+        DB::table('sectors')->truncate();
+        DB::table('sectors')->insert([
+            ['id' => 1,  'name' => 'Внатрешни работи - полиција и/или администрација'],
+            ['id' => 2,  'name' => 'Судство'],
+            ['id' => 3,  'name' => 'Здравство'],
+            ['id' => 4,  'name' => 'Образование'],
+            ['id' => 5,  'name' => 'Управа за јавни приходи'],
+            ['id' => 6,  'name' => 'Царина'],
+            ['id' => 7,  'name' => 'Урбанизам'],
+            ['id' => 8,  'name' => 'Култура'],
+            ['id' => 9,  'name' => 'Спорт'],
+            ['id' => 10, 'name' => 'Земјоделство и стопанство'],
+            ['id' => 11, 'name' => 'Општина и други јавни работи (вработување, пензиско, матични книги итн)'],
+            ['id' => 12, 'name' => 'Не сум бил/а во таква ситуација'],
+        ]);
+
+        // --- GOODS ---
+        DB::table('goods')->truncate();
+        DB::table('goods')->insert([
+            ['id' => 1, 'name' => 'Парични средства'],
+            ['id' => 2, 'name' => 'Движен имот (автомобил, мотор и сл)'],
+            ['id' => 3, 'name' => 'Недвижен имот'],
+            ['id' => 4, 'name' => 'Мали подароци и други добра'],
+            ['id' => 5, 'name' => 'Противуслуга или бизнис олеснување'],
+            ['id' => 6, 'name' => 'Преферирам да не одговорам'],
+            ['id' => 7, 'name' => 'Друго'],
+        ]);
+
+        // --- REASONS ---
+        DB::table('reasons')->truncate();
+        DB::table('reasons')->insert([
+            ['id' => 1, 'name' => 'За да се забрза процес'],
+            ['id' => 2, 'name' => 'За да се одбегне казна или забрана'],
+            ['id' => 3, 'name' => 'За да се добие услуга која е сепак бесплатна или треба да е достапна'],
+            ['id' => 4, 'name' => 'За да се добијат подобри резултати или предност пред други (чекање, тендер, дозволи)'],
+            ['id' => 5, 'name' => 'За да се „заблагодари“ однапред некому за завршување работа'],
+            ['id' => 6, 'name' => 'Преферирам да не одговорам'],
+        ]);
+
+        Schema::enableForeignKeyConstraints();
+    }
+}

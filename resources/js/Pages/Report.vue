@@ -1,39 +1,17 @@
 <template>
   <div class="min-h-screen flex flex-col bg-gradient-to-b from-gray-50 to-gray-100">
-
-    <!-- HEADER -->
+    <!-- HEADER (same as yours) -->
     <header class="bg-gray-900 text-white shadow">
       <div class="max-w-7xl mx-auto px-4 py-4 flex items-center justify-between">
-
-        <!-- Logo -->
         <div class="flex items-center gap-3">
           <img src="../../images/multus.png" class="w-12 sm:w-14" alt="Multus Logo">
           <h1 class="text-lg sm:text-xl font-bold tracking-wide">Multus</h1>
         </div>
-
-        <!-- Hamburger Button -->
-        <button @click="isOpen = !isOpen"
-          class="sm:hidden focus:outline-none focus:ring-2 focus:ring-yellow-400 rounded">
-          <svg xmlns="http://www.w3.org/2000/svg" class="h-7 w-7" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path v-if="!isOpen" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-              d="M4 6h16M4 12h16M4 18h16" />
-            <path v-else stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
-          </svg>
-        </button>
-
-        <!-- Desktop Nav -->
         <nav class="hidden sm:flex gap-6 text-sm font-medium">
           <Link :href="route('map')" class="hover:text-yellow-400 transition">Мапа</Link>
           <Link :href="route('about')" class="hover:text-yellow-400 transition">За нас</Link>
-          <Link href="/report" class="hover:text-yellow-400 transition">Пријави корупција</Link>
+          <Link :href="route('report.create')" class="hover:text-yellow-400 transition">Пријави корупција</Link>
         </nav>
-      </div>
-
-      <!-- Mobile Dropdown -->
-      <div v-if="isOpen" class="sm:hidden px-4 pb-4 space-y-2">
-        <Link :href="route('map')" class="block hover:text-yellow-400 transition">Мапа</Link>
-        <Link :href="route('about')" class="block hover:text-yellow-400 transition">За нас</Link>
-        <Link href="/report" class="block hover:text-yellow-400 transition">Пријави корупција</Link>
       </div>
     </header>
 
@@ -48,66 +26,167 @@
         {{ $page.props.flash.success }}
       </div>
 
-      <!-- FORM -->
-      <form @submit.prevent="submit" class="bg-white rounded-xl border p-4 sm:p-6 space-y-5">
+      <form @submit.prevent="submit" class="bg-white rounded-xl border p-4 sm:p-6 space-y-8">
 
-        <!-- Municipality -->
         <div>
-          <label class="block text-sm font-medium text-gray-700 mb-1">Општина</label>
-          <select v-model="form.municipality_name" class="w-full rounded border-gray-300">
-            <option value="" disabled>— Одбери општина —</option>
-            <option v-for="m in municipalities" :key="m.name" :value="m.name">
+          <label class="block text-sm font-medium text-gray-700 mb-1">Во која општина се одвивало коруптивното
+            дејство?</label>
+          <select v-model="form.municipality_id" class="w-full rounded border-gray-300">
+            <option :value="null" disabled>— Одбери општина —</option>
+            <option v-for="m in municipalities" :key="m.id" :value="m.id">
               {{ m.name }}
             </option>
           </select>
-          <p v-if="form.errors.municipality_name" class="text-sm text-red-600 mt-1">
-            {{ form.errors.municipality_name }}
+          <p v-if="form.errors.municipality_id" class="text-sm text-red-600 mt-1">
+            {{ form.errors.municipality_id }}
           </p>
         </div>
 
-
-        <!-- Sector -->
-        <div>
-          <label class="block text-sm font-medium text-gray-700 mb-1">Сектор</label>
-          <select v-model="form.sector" class="w-full rounded border-gray-300">
-            <option value="" disabled>— Одбери сектор —</option>
-            <option v-for="s in sectors" :key="s" :value="s">{{ s }}</option>
-          </select>
-          <p v-if="form.errors.sector" class="text-sm text-red-600 mt-1">
-            {{ form.errors.sector }}
-          </p>
-        </div>
-
-        <!-- Gender -->
         <div>
           <label class="block text-sm font-medium text-gray-700 mb-1">Пол</label>
           <select v-model="form.gender" class="w-full rounded border-gray-300">
-            <option value="" disabled>— Вашиот пол —</option>
-            <option value="male">Машки</option>
-            <option value="female">Женски</option>
-            <option value="other">Друго</option>
+            <option :value="null" disabled>— Одбери —</option>
+            <option value="Женски">Женски</option>
+            <option value="Машки">Машки</option>
           </select>
           <p v-if="form.errors.gender" class="text-sm text-red-600 mt-1">
             {{ form.errors.gender }}
           </p>
         </div>
 
-        <!-- Description -->
+
+
+
+
+
+        <!-- AGE RANGE -->
         <div>
-          <label class="block text-sm font-medium text-gray-700 mb-1">Опис (опционално)</label>
-          <textarea v-model="form.description" rows="4" class="w-full rounded border-gray-300"></textarea>
-          <p v-if="form.errors.description" class="text-sm text-red-600 mt-1">
-            {{ form.errors.description }}
+          <label class="block text-sm font-medium text-gray-700 mb-1">Возраст</label>
+          <select v-model="form.age_range" class="w-full rounded border-gray-300">
+            <option :value="null" disabled>— Одбери возраст —</option>
+            <option value="18-25">18–24</option>
+            <option value="26-35">25–34</option>
+            <option value="36-45">35–44</option>
+            <option value="46-55">45–54</option>
+            <option value="65+">55+</option>
+          </select>
+          <p v-if="form.errors.age_range" class="text-sm text-red-600 mt-1">
+            {{ form.errors.age_range }}
           </p>
         </div>
 
-        <!-- Evidence -->
+
+        <!-- 3) МИТО -->
+        <!-- 1. Дали сте биле во ситуација каде што некој ви побарал мито? -->
         <div>
-          <label class="block text-sm font-medium text-gray-700 mb-1">Линк до доказ (опционално)</label>
-          <input v-model="form.evidence_url" type="url" class="w-full rounded border-gray-300"
-            placeholder="https://...">
-          <p v-if="form.errors.evidence_url" class="text-sm text-red-600 mt-1">
-            {{ form.errors.evidence_url }}
+          <label class="font-semibold">Дали сте биле во ситуација каде што некој ви побарал мито?</label>
+          <div class="flex items-center gap-4 mt-1">
+            <label><input type="radio" value="Да" v-model="form.bribe_requested" /> Да</label>
+            <label><input type="radio" value="Не" v-model="form.bribe_requested" /> Не</label>
+          </div>
+          <p v-if="form.errors.bribe_requested" class="text-sm text-red-600 mt-1">
+            {{ form.errors.bribe_requested }}
+          </p>
+        </div>
+
+        <!-- 2. Дали сте биле во ситуација каде што сами сте понудиле мито? -->
+        <div>
+          <label class="font-semibold">Дали сте биле во ситуација каде што сами сте понудиле мито?</label>
+          <div class="flex items-center gap-4 mt-1">
+            <label><input type="radio" value="Да" v-model="form.bribe_offered" /> Да</label>
+            <label><input type="radio" value="Не" v-model="form.bribe_offered" /> Не</label>
+          </div>
+          <p v-if="form.errors.bribe_offered" class="text-sm text-red-600 mt-1">
+            {{ form.errors.bribe_offered }}
+          </p>
+        </div>
+
+
+        <!-- 4) СЕКТОР (multi) -->
+        <div>
+          <label class="block text-sm font-medium text-gray-700 mb-2">Одберете сектор во кој се одвивало коруптивното
+            дејство“</label>
+          <div class="grid sm:grid-cols-2 gap-2">
+            <label v-for="s in sectors" :key="s.id" class="flex items-start gap-2">
+              <input type="checkbox" :value="s.id" v-model="form.sector_ids" class="mt-1">
+              <span class="text-sm text-gray-800">{{ s.name }}</span>
+            </label>
+          </div>
+          <p v-if="form.errors.sector_ids" class="text-sm text-red-600 mt-1">
+            {{ form.errors.sector_ids }}
+          </p>
+        </div>
+
+        <!-- 5) ДОБРА (multi) -->
+        <div>
+          <label class="block text-sm font-medium text-gray-700 mb-2">Во каков вид на добра?</label>
+          <div class="grid sm:grid-cols-2 gap-2">
+            <label v-for="g in goods" :key="g.id" class="flex items-start gap-2">
+              <input type="checkbox" :value="g.id" v-model="form.good_ids" class="mt-1">
+              <span class="text-sm text-gray-800">{{ g.name }}</span>
+            </label>
+          </div>
+          <p v-if="form.errors.good_ids" class="text-sm text-red-600 mt-1">
+            {{ form.errors.good_ids }}
+          </p>
+        </div>
+
+        <!-- 6) ПРИЧИНА (multi) -->
+        <div>
+          <label class="block text-sm font-medium text-gray-700 mb-2">Причина за мито</label>
+          <div class="grid sm:grid-cols-2 gap-2">
+            <label v-for="r in reasons" :key="r.id" class="flex items-start gap-2">
+              <input type="checkbox" :value="r.id" v-model="form.reason_ids" class="mt-1">
+              <span class="text-sm text-gray-800">{{ r.name }}</span>
+            </label>
+          </div>
+          <p v-if="form.errors.reason_ids" class="text-sm text-red-600 mt-1">
+            {{ form.errors.reason_ids }}
+          </p>
+        </div>
+
+        <!-- 7) ИЗБОР -->
+        <div>
+          <label class="block text-sm font-medium text-gray-700 mb-1">Дали чувствувавте дека имате избор?</label>
+          <select v-model="form.felt_choice" class="w-full rounded border-gray-300">
+            <option :value="null" disabled>— Одбери —</option>
+            <option value="Да">Да</option>
+            <option value="Не">Не</option>
+            <option value="Преферирам да не одговорам">Преферирам да не одговорам</option>
+          </select>
+          <p v-if="form.errors.felt_choice" class="text-sm text-red-600 mt-1">
+            {{ form.errors.felt_choice }}
+          </p>
+        </div>
+
+        <!-- 8) РАНГ -->
+        <div>
+          <label class="block text-sm font-medium text-gray-700 mb-1">Од кој пол и ранг беше административецот?</label>
+          <select v-model="form.admin_rank" class="w-full rounded border-gray-300">
+            <option :value="null" disabled>— Одбери —</option>
+            <option value="Машки - висок ранг (раководна или позиција на одговорно лице)">Машки - висок ранг (раководна
+              или позиција на одговорно лице)</option>
+            <option value="Женски - висок ранг (раководна или позиција на одговорно лице)">Женски - висок ранг
+              (раководна или позиција на одговорно лице)</option>
+            <option value="Машки - низок ранг (вработен во јавна администрација на секоја друга позиција)">Машки - низок
+              ранг (вработен во јавна администрација на секоја друга позиција)</option>
+            <option value="Женски - низок ранг (вработена во јавна администрација на секоја друга позиција)">Женски -
+              низок ранг (вработена во јавна администрација на секоја друга позиција)</option>
+            <option value="Преферирам да не одговорам">Преферирам да не одговорам</option>
+          </select>
+          <p v-if="form.errors.admin_rank" class="text-sm text-red-600 mt-1">
+            {{ form.errors.admin_rank }}
+          </p>
+        </div>
+
+        <!-- 9) ПРИКАЗНА -->
+        <div>
+          <label class="block text-sm font-medium text-gray-700 mb-1">Сподели ја твојата приказна</label>
+          <label class="block text-sm font-medium text-gray-700 mb-1">Опишете ја ситуацијата - која била причината за
+            побараниот или понудениот поткуп?</label>
+          <textarea v-model="form.story" rows="4" class="w-full rounded border-gray-300"></textarea>
+          <p v-if="form.errors.story" class="text-sm text-red-600 mt-1">
+            {{ form.errors.story }}
           </p>
         </div>
 
@@ -121,50 +200,37 @@
       </form>
     </main>
 
-    <!-- FOOTER -->
+    <!-- FOOTER (same as yours) -->
     <footer class="bg-gray-900 text-gray-400 mt-8">
-      <div
-        class="max-w-7xl mx-auto px-4 py-6 flex flex-col md:flex-row justify-between items-center text-sm space-y-4 md:space-y-0">
-        <p>© 2025 Multus. All rights reserved.</p>
-
-        <div class="flex gap-4">
-          <a target="_blank" href="https://www.facebook.com/MultusCentar/">
-            <img src="../../images/facebook.png" class="w-5" alt="">
-          </a>
-          <a target="_blank" href="https://www.instagram.com/centar.multus/">
-            <img src="../../images/instagram.png" class="w-5" alt="">
-          </a>
-        </div>
-      </div>
+      <div class="max-w-7xl mx-auto px-4 py-6 text-sm">© 2025 Multus. All rights reserved.</div>
     </footer>
   </div>
 </template>
 
-
 <script setup>
 import { Link, useForm } from '@inertiajs/vue3'
-import { ref } from 'vue'
-const isOpen = ref(false);
-
-
-
 
 const props = defineProps({
-  sectors: Array,
   municipalities: Array,
+  sectors: Array,
+  goods: Array,
+  reasons: Array,
 })
-
-
 
 const form = useForm({
-  municipality_name: '',
-  sector: '',
-  description: '',
-  evidence_url: '',
-  lat: null,
-  lng: null,
-})
+  municipality_id: null,
+  gender: null,
+  age_range: null,
+  bribe_requested: null,
+  bribe_offered: null,
+  felt_choice: null,
+  admin_rank: null,
+  story: '',
 
+  sector_ids: [],
+  good_ids: [],
+  reason_ids: [],
+})
 
 
 const submit = () => {
