@@ -1,5 +1,5 @@
 # ✅ PHP 8.2 on Debian bullseye (has libonig-dev for mbstring)
-FROM php:8.2-cli-bullseye
+FROM php:8.2-cli-bookworm
 
 # ✅ System deps for PHP extensions + SQLite
 RUN apt-get update && apt-get install -y \
