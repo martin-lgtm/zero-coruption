@@ -26,6 +26,7 @@ class StaticLookupsSeeder extends Seeder
             ['id' => 8,  'name' => 'Ново Село'],
             ['id' => 9,  'name' => 'Радовиш'],
             ['id' => 10, 'name' => 'Струмица'],
+            ['id' => 11, 'name' => 'Скопје'],
             // add more if you need them
         ]);
 
