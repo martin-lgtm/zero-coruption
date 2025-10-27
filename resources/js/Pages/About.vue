@@ -39,16 +39,30 @@
         </header>
 
         <main class="flex-1 max-w-4xl mx-auto py-12 px-6">
-            <h1 class="text-3xl font-bold mb-4">Lorem ipsum</h1>
+            <h1 class="text-3xl font-bold mb-4">Multus</h1>
             <p class="text-gray-700">
-                Lorem ipsum, dolor sit amet consectetur adipisicing elit. Harum sit itaque dicta facere nisi alias in
-                commodi cum asperiores, quae, autem deserunt possimus omnis obcaecati accusamus vel magni natus
-                praesentium, non rerum veritatis molestias totam. Eveniet deleniti magnam impedit culpa minima quia quo
-                quam maiores sequi. Reprehenderit exercitationem placeat nulla eveniet doloribus, incidunt reiciendis
-                magni quia eius, excepturi velit iste numquam, labore eum voluptate quos neque quisquam ut? Cumque fugit
-                velit rerum aspernatur et amet eligendi ad inventore voluptatibus, aliquam sed totam ullam possimus
-                iusto eius officiis eaque, voluptates impedit qui repudiandae laboriosam quaerat molestiae animi.
-                Pariatur nam porro expedita.
+                Center for Education Culture and Activism Multus from Gevgelija is a local civil society organization,
+                founded on December 3, 2018, from enthusiasts, media workers and artists, in order to act towards
+                improvement in the respective fields contained in its name, to rise awareness and boost the critical
+                thinking among the local and national targeted audience. The main focus of the activities and projects
+                of Center Multus is Media and Digital Literacy, debunking disinformarion and gender perspectives. This
+                is the only non-governmental organization in the region that deals mainly with this issue. We work with
+                creators and social media influencers, aiming to improve the content the audience consumes through their
+                feeds and to use that media space for educational purposes.
+            </p>
+            <p class="mt-4">
+                The mission of the association is aimed at identifying social problems, developing socially innovative
+                projects and linking them with individuals and groups. The goal is to encourage cultural and social
+                awareness. The organization develops programs and models for strengthening young people and citizens’
+                critical thinking, promotes active participation and individual responsibility for the future well-being
+                of the whole society. Multus is a platform that connects people committed to transforming social,
+                environmental and cultural challenges offering opportunities prosperity for the community.
+            </p>
+            <p class="mt-4">
+                Through initiatives like this project, Multus continues its mission of translating complex media and
+                digital literacy issues into accessible, relatable narratives. By addressing the evolving risks of media
+                manipulation and digital exposure, the organization remains committed to equipping young people with the
+                critical thinking skills necessary to navigate an increasingly digital world.
             </p>
         </main>
 
