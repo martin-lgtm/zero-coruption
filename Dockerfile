@@ -39,18 +39,9 @@ RUN mkdir -p storage bootstrap/cache /var/data \
 # ✅ Expose Render port
 EXPOSE 10000
 
-# ✅ CMD – **NO DB TOUCHING**
-# - Does NOT create the DB
-# - Does NOT run migrate/seed
-# - Fails fast if DB_DATABASE is set but file not found (for SQLite)
+# ✅ CMD – manual control (no auto migrate/seed)
 CMD sh -c '\
   php artisan package:discover --ansi && \
   php artisan optimize && \
-  if [ -n "$DB_CONNECTION" ] && [ "$DB_CONNECTION" = "sqlite" ] && [ -n "$DB_DATABASE" ]; then \
-    if [ ! -f "$DB_DATABASE" ]; then \
-      echo "❌ Refusing to start: SQLite DB file not found at $DB_DATABASE"; \
-      echo "   (This container never creates or migrates your DB automatically.)"; \
-      exit 1; \
-    fi; \
-  fi && \
+  echo "🚀 Starting Laravel without automatic migrations or seeding..." && \
   php artisan serve --host=0.0.0.0 --port=10000'
