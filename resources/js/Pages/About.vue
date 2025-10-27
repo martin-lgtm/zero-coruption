@@ -1,5 +1,5 @@
 <template>
-    <div class="min-h-screen flex flex-col bg-gradient-to-b from-gray-50 to-gray-100">
+    <div class="min-h-screen flex flex-col bg-gradient-to-b from-red-400 to-gray-100">
         <!-- HEADER -->
         <header class="bg-gray-900 text-white shadow">
             <div class="max-w-7xl mx-auto px-4 py-4 flex items-center justify-between">
