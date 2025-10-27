@@ -39,16 +39,18 @@ RUN mkdir -p storage bootstrap/cache /var/data \
 # ✅ Expose Render port
 EXPOSE 10000
 
-# ✅ CMD – safe mode (no reseeding)
+# ✅ CMD – **NO DB TOUCHING**
+# - Does NOT create the DB
+# - Does NOT run migrate/seed
+# - Fails fast if DB_DATABASE is set but file not found (for SQLite)
 CMD sh -c '\
-    php artisan package:discover --ansi && \
-    mkdir -p "$(dirname "$DB_DATABASE")" && \
+  php artisan package:discover --ansi && \
+  php artisan optimize && \
+  if [ -n "$DB_CONNECTION" ] && [ "$DB_CONNECTION" = "sqlite" ] && [ -n "$DB_DATABASE" ]; then \
     if [ ! -f "$DB_DATABASE" ]; then \
-        echo "📀 Creating new SQLite database..."; \
-        touch "$DB_DATABASE"; \
-        php artisan migrate --force && \
-        php artisan db:seed --force || true; \
-    else \
-        echo "✅ Using existing database (no reseed)"; \
-    fi && \
-    php artisan serve --host=0.0.0.0 --port=10000'
+      echo "❌ Refusing to start: SQLite DB file not found at $DB_DATABASE"; \
+      echo "   (This container never creates or migrates your DB automatically.)"; \
+      exit 1; \
+    fi; \
+  fi && \
+  php artisan serve --host=0.0.0.0 --port=10000'
