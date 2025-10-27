@@ -101,6 +101,21 @@
           </p>
         </div>
 
+        <!-- Би пријавиле ако е безбедно? -->
+        <div>
+          <label class="font-semibold"> Доколку има безбеден начин за пријавување корупција или знаете дека случајот би
+            бил процесиран, дали би пријавиле?
+          </label>
+          <div class="flex items-center gap-4 mt-1">
+            <label><input type="radio" value="Да" v-model="form.would_report_if_safe" /> Да</label>
+            <label><input type="radio" value="Не" v-model="form.would_report_if_safe" /> Не</label>
+          </div>
+          <p v-if="form.errors.would_report_if_safe" class="text-sm text-red-600 mt-1">
+            {{ form.errors.would_report_if_safe }}
+          </p>
+        </div>
+
+
 
         <!-- 4) СЕКТОР (multi) -->
         <div>
@@ -230,6 +245,7 @@ const form = useForm({
   sector_ids: [],
   good_ids: [],
   reason_ids: [],
+   would_report_if_safe: null,
 })
 
 

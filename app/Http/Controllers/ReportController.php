@@ -24,6 +24,8 @@ class ReportController extends Controller
     ];
     $ageRangeOptions = ['18-25','26-35','36-45','46-55','56-65','65+'];
     $yesNo = ['Да','Не'];
+        $wouldReportOptions  = ['Да','Не','Преферирам да не одговорам'];
+
 
     $validated = $request->validate([
         'municipality_id' => ['required','integer','exists:municipalities,id'],
@@ -33,6 +35,8 @@ class ReportController extends Controller
         'bribe_offered'   => ['required', Rule::in($yesNo)],
         'felt_choice'     => ['required', Rule::in($feltChoiceOptions)],
         'admin_rank'      => ['required', Rule::in($adminRankOptions)],
+                'would_report_if_safe' => ['required', Rule::in($wouldReportOptions)],
+
         'story'           => ['nullable','string','max:5000'],
 
         'sector_ids'      => ['nullable','array'],
@@ -49,6 +53,8 @@ class ReportController extends Controller
         'age_range'       => $validated['age_range'],
         'bribe_requested' => $validated['bribe_requested'],
         'bribe_offered'   => $validated['bribe_offered'],
+                'would_report_if_safe' => $validated['would_report_if_safe'],
+
         'felt_choice'     => $validated['felt_choice'],
         'admin_rank'      => $validated['admin_rank'],
         'story'           => $validated['story'] ?? null,
@@ -60,4 +66,8 @@ class ReportController extends Controller
 
     return back()->with('success', 'Пријавата е успешно поднесена!');
 }
+
+
+
+
 }

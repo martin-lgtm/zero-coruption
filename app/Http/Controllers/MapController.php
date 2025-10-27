@@ -49,6 +49,7 @@ class MapController extends Controller
                 'ages' => [],
                 'bribe_requested' => [],
                 'bribe_offered' => [],
+                'would_report'=>[],
             ],
             'comments' => [],
         ];
@@ -66,6 +67,7 @@ class MapController extends Controller
                     'charts' => [
                         'sectors' => [], 'goods' => [], 'reasons' => [],
                         'ages' => [], 'bribe_requested' => [], 'bribe_offered' => [],
+                        'would_report'=>[],
                     ],
                     'comments' => [],
                 ];
@@ -130,6 +132,21 @@ class MapController extends Controller
         ->groupBy('municipalities.name', 'reports.bribe_offered')
         ->get();
     $attachCounts($payload, $byOffered, 'bribe_offered', $muniKey);
+
+    // 7️⃣ Would report if safe
+$byWouldReport = DB::table('reports')
+    ->join('municipalities','reports.municipality_id','=','municipalities.id')
+    ->whereNotNull('reports.would_report_if_safe')->where('reports.would_report_if_safe','!=','')
+    ->select(
+        'municipalities.name as municipality_name',
+        'would_report_if_safe as label',
+        DB::raw('COUNT(*) as total')
+    )
+    ->groupBy('municipalities.name','would_report_if_safe')
+    ->get();
+
+$attachCounts($payload, $byWouldReport, 'would_report', $muniKey);
+
 
     // 💬 Comments
     $comments = DB::table('reports')

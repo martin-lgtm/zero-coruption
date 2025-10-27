@@ -89,6 +89,10 @@
               <div class="rounded-xl border p-3 flex items-center justify-center h-[260px]">
                 <div ref="pieBribeOfferedEl" class="w-full h-full"></div>
               </div>
+              <div class="rounded-xl border p-3 flex items-center justify-center h-[260px]">
+  <div ref="pieWouldReportEl" class="w-full h-full"></div>
+</div>
+
             </div>
 
           </div>
@@ -179,6 +183,9 @@ const pieReasonsEl = ref(null)
 const pieAgeEl = ref(null)
 const pieBribeRequestedEl = ref(null)
 const pieBribeOfferedEl = ref(null)
+const pieWouldReportEl = ref(null)
+
+
 const pies = {
   sector: null,
   goods: null,
@@ -186,6 +193,7 @@ const pies = {
   ages: null,
   bribe_requested: null,
   bribe_offered: null,
+  would_report: null,
 }
 let map, geoLayer
 const page = usePage()
@@ -199,8 +207,7 @@ const corruptionData = computed(() => {
       name: m.name,
       total: m.total || 0,
       comments: m.comments || [],
-      // ✅ ensure ages bucket exists
-      charts: m.charts || { sectors: {}, goods: {}, reasons: {}, ages: {} },
+      charts: m.charts || { sectors: {}, goods: {}, reasons: {}, ages: {}, would_report:{} },
     }
   }
   return out
@@ -250,6 +257,8 @@ function refreshPies(code) {
     renderPie(pieAgeEl, 'ages', 'Возрасни групи', rec.charts.ages)
     renderPie(pieBribeRequestedEl, 'bribe_requested', 'Побарување на мито', rec.charts.bribe_requested)
     renderPie(pieBribeOfferedEl, 'bribe_offered', 'Понудување на мито', rec.charts.bribe_offered)
+    renderPie(pieWouldReportEl, 'would_report', 'Би пријавиле ако е безбедно?', rec.charts.would_report)
+
   })
 }
 

@@ -21,6 +21,7 @@ protected $fillable = [
     'felt_choice',
     'admin_rank',
     'story',
+    'would_report_if_safe',
 ];
 
 
