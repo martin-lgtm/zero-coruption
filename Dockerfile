@@ -39,9 +39,15 @@ RUN mkdir -p storage bootstrap/cache /var/data \
 # ✅ Expose Render port
 EXPOSE 10000
 
-# ✅ CMD – manual control (no auto migrate/seed)
+# ✅ CMD – safe mode (no reseeding)
 CMD sh -c '\
   php artisan package:discover --ansi && \
-  php artisan optimize && \
-  echo "🚀 Starting Laravel without automatic migrations or seeding..." && \
+  mkdir -p "$(dirname "$DB_DATABASE")" && \
+  if [ ! -f "$DB_DATABASE" ]; then \
+      echo "⚠️  Database file not found at $DB_DATABASE"; \
+      echo "   (No automatic migrations or seeding will be run.)"; \
+      touch "$DB_DATABASE"; \
+  else \
+      echo "✅ Using existing database: $DB_DATABASE"; \
+  fi && \
   php artisan serve --host=0.0.0.0 --port=10000'
