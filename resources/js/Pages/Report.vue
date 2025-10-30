@@ -217,7 +217,29 @@
 
     <!-- FOOTER (same as yours) -->
     <footer class="bg-gray-900 text-gray-400 mt-8">
-      <div class="max-w-7xl mx-auto px-4 py-6 text-sm">© 2025 Multus. All rights reserved.</div>
+      <div class="max-w-7xl mx-auto px-4 py-6 flex flex-col md:flex-row justify-between items-center text-sm">
+        <p>Оваа активност се спроведува во рамки на проектот „Под маса: претпродба на
+          интегритетот“ кој го спроведува Центар за едукација, култура и активизам Мултус.
+          Проектот е дел од програмата за мали грантови на СЕЛДИ која се спроведува во
+          рамки на проектот „Граѓанско општество за добро владеење и антикорупција во
+          Југоисточна Европа: Градење на капацитети за застапување врз база на докази,
+          влијание врз политики и граѓански ангажман (СЕЛДИ.нет)“, финансиран од
+          Европската Унија. Оваа содржина е единствена одговорност на Центар за
+          едукација, култура и активизам Мултус и не нужно ги одразува ставовите на
+          Евопската Унија и СЕЛДИ.</p>
+
+
+      </div>
+      <div class="max-w-7xl mx-auto px-4 py-6 flex flex-col md:flex-row justify-between items-center">
+        <img src="../../images/Funded_by_EU-removebg-preview.png" alt="">
+        <img class="w-44" src="../../images/eu with you copy.png" alt="">
+        <img class="w-44" src="../../images/Seldi_Logo-removebg-preview.png" alt="">
+        <img class="w-44" src="../../images/MULTUS_final_Artboard_11_copy_2-removebg-preview.png" alt="">
+      </div>
+      <div class="max-w-7xl mx-auto px-4 py-4 border-t border-gray-700 text-center text-sm">
+        <p>© 2025 Multus. All rights reserved.</p>
+
+      </div>
     </footer>
   </div>
 </template>
@@ -245,7 +267,7 @@ const form = useForm({
   sector_ids: [],
   good_ids: [],
   reason_ids: [],
-   would_report_if_safe: null,
+  would_report_if_safe: null,
 })
 
 
