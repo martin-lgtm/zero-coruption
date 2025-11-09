@@ -146,13 +146,12 @@
       </div>
       <div class="max-w-7xl mx-auto px-4 py-6 flex flex-col md:flex-row justify-between items-center">
         <img src="../../images/Funded_by_EU-removebg-preview.png" alt="">
-        <img class="w-44" src="../../images/eu with you copy.png" alt="">
-        <img class="w-44" src="../../images/Seldi_Logo-removebg-preview.png" alt="">
-        <img class="w-44" src="../../images/MULTUS_final_Artboard_11_copy_2-removebg-preview.png" alt="">
+        <img class="w-48" src="../../images/eu with you copy.png" alt="">
+        <img class="w-72" src="../../images/Seldi_Logo-removebg-preview.png" alt="">
+        <img class="w-[380px]" src="../../images/MULTUS_final_Artboard_11_copy_2-removebg-preview.png" alt="">
       </div>
       <div class="max-w-7xl mx-auto px-4 py-4 border-t border-gray-700 text-center text-sm">
         <p>© 2025 Multus. All rights reserved.</p>
-
       </div>
     </footer>
   </div>
