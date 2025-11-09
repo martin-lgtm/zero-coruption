@@ -32,7 +32,11 @@ Route::get('/about', [PageController::class, 'about'])->name('about');
 Route::get('/report', [PageController::class, 'report'])->name('report.create');
 Route::post('/report', [ReportController::class, 'store'])->name('report.store');
 
-
+Route::get('/report/publish-warning', function () {
+    return Inertia::render('Report', [
+        'showPublishWarning' => true,
+    ]);
+})->name('report.publish-warning');
 
 Route::get('/', function () {
     return Inertia::render('Welcome', [

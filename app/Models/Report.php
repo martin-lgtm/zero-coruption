@@ -22,6 +22,13 @@ protected $fillable = [
     'admin_rank',
     'story',
     'would_report_if_safe',
+    'consent',
+    'consent_publish',
+];
+
+protected $casts = [
+    'consent' => 'boolean',
+    'consent_publish' => 'boolean',
 ];
 
 

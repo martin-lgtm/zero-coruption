@@ -268,13 +268,13 @@ function refreshPies(code) {
   const rec = corruptionData.value[code]
   if (!rec) return
   nextTick(() => {
-    renderPie(pieSectorEl, 'sector', 'Процент по сектор', rec.charts.sectors)
-    renderPie(pieGoodsEl, 'goods', 'Вид на добра', rec.charts.goods)
-    renderPie(pieReasonsEl, 'reasons', 'Причина за мито', rec.charts.reasons)
+    renderPie(pieSectorEl, 'sector', 'Процент на коруптивни случаи по сектор', rec.charts.sectors)
+    renderPie(pieGoodsEl, 'goods', 'Вид на добра користени за поткуп', rec.charts.goods)
+    renderPie(pieReasonsEl, 'reasons', 'Причина за поткуп', rec.charts.reasons)
     renderPie(pieAgeEl, 'ages', 'Возрасни групи', rec.charts.ages)
-    renderPie(pieBribeRequestedEl, 'bribe_requested', 'Побарување на мито', rec.charts.bribe_requested)
-    renderPie(pieBribeOfferedEl, 'bribe_offered', 'Понудување на мито', rec.charts.bribe_offered)
-    renderPie(pieWouldReportEl, 'would_report', 'Би пријавиле ако е безбедно?', rec.charts.would_report)
+    renderPie(pieBribeRequestedEl, 'bribe_requested', 'Побаран поткуп', rec.charts.bribe_requested)
+    renderPie(pieBribeOfferedEl, 'bribe_offered', 'Понуден поткуп', rec.charts.bribe_offered)
+    renderPie(pieWouldReportEl, 'would_report', 'Дали би пријавиле ако е безбедно?', rec.charts.would_report)
 
   })
 }

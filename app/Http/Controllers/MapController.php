@@ -134,7 +134,7 @@ class MapController extends Controller
     $attachCounts($payload, $byOffered, 'bribe_offered', $muniKey);
 
     // 7️⃣ Would report if safe
-$byWouldReport = DB::table('reports')
+    $byWouldReport = DB::table('reports')
     ->join('municipalities','reports.municipality_id','=','municipalities.id')
     ->whereNotNull('reports.would_report_if_safe')->where('reports.would_report_if_safe','!=','')
     ->select(
@@ -145,16 +145,24 @@ $byWouldReport = DB::table('reports')
     ->groupBy('municipalities.name','would_report_if_safe')
     ->get();
 
-$attachCounts($payload, $byWouldReport, 'would_report', $muniKey);
+    $attachCounts($payload, $byWouldReport, 'would_report', $muniKey);
 
 
     // 💬 Comments
-    $comments = DB::table('reports')
-        ->join('municipalities', 'reports.municipality_id', '=', 'municipalities.id')
-        ->whereNotNull('reports.story')->where('reports.story', '!=', '')
-        ->select('reports.id as report_id', 'municipalities.name as municipality_name', 'reports.story', 'reports.created_at')
-        ->orderByDesc('reports.created_at')
-        ->get();
+$comments = DB::table('reports')
+    ->join('municipalities', 'reports.municipality_id', '=', 'municipalities.id')
+    ->where('reports.consent_publish', true) // ✅ only those who agreed to be public
+    ->whereNotNull('reports.story')
+    ->where('reports.story', '!=', '')
+    ->select(
+        'reports.id as report_id',
+        'municipalities.name as municipality_name',
+        'reports.story',
+        'reports.created_at'
+    )
+    ->orderByDesc('reports.created_at')
+    ->get();
+
 
     foreach ($comments as $c) {
         $code = $muniKey($c->municipality_name);
