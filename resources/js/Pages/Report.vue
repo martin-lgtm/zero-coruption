@@ -193,7 +193,6 @@
           </p>
         </div>
 
-        <!-- 12) Приказна + consent_publish -->
         <div>
           <label class="block text-sm font-medium text-gray-700 mb-1">
             Сподели ја твојата приказна
@@ -206,7 +205,6 @@
             {{ form.errors.story }}
           </p>
 
-          <!-- consent_publish -->
           <label class="flex items-start gap-3 mt-3">
             <input v-model="form.consent_publish" type="checkbox"
               class="mt-1 h-4 w-4 text-yellow-500 border-gray-300 rounded focus:ring-yellow-400" />
@@ -222,11 +220,12 @@
             class="mt-1 h-4 w-4 text-yellow-500 border-gray-300 rounded focus:ring-yellow-400" />
           <span class="text-sm text-gray-700 leading-relaxed">
             Потврдувам дека сум согласен/а со обработката и користењето на доставените податоци согласно со
-            <Link href="/privacy" class="text-blue-600 hover:underline" target="_blank">
-            Политиката за приватност
-            </Link>.
+            <button type="button" class="text-blue-600 hover:underline" @click="showPrivacyPolicy = true">
+              Политиката за приватност
+            </button>.
           </span>
         </label>
+
 
         <!-- Submit -->
         <div class="pt-2">
@@ -238,10 +237,42 @@
       </form>
     </main>
 
+    <footer class="bg-gray-900 text-gray-400 mt-8">
+      <div class="max-w-7xl mx-auto px-4 py-6 flex flex-col md:flex-row justify-between items-center text-sm">
+        <p>Оваа активност се спроведува во рамки на проектот „Под маса: претпродба на
+          интегритетот“ кој го спроведува Центар за едукација, култура и активизам Мултус.
+          Проектот е дел од програмата за мали грантови на СЕЛДИ која се спроведува во
+          рамки на проектот „Граѓанско општество за добро владеење и антикорупција во
+          Југоисточна Европа: Градење на капацитети за застапување врз база на докази,
+          влијание врз политики и граѓански ангажман (СЕЛДИ.нет)“, финансиран од
+          Европската Унија. Оваа содржина е единствена одговорност на Центар за
+          едукација, култура и активизам Мултус и не нужно ги одразува ставовите на
+          Евопската Унија и СЕЛДИ.</p>
+
+        <!-- <div class="flex gap-4 mt-4 md:mt-0 bg-red-400 p-2 rounded">
+                    <a target="_blank" href="https://www.facebook.com/MultusCentar/">
+                        <img src="../../images/facebook.png" class="w-5" alt="">
+                    </a>
+                    <a target="_blank" href="https://www.instagram.com/centar.multus/">
+                        <img src="../../images/instagram.png" class="w-5" alt="">
+                    </a>
+                </div> -->
+      </div>
+      <div class="max-w-7xl mx-auto px-4 py-6 flex flex-col md:flex-row justify-between items-center">
+        <img src="../../images/Funded_by_EU-removebg-preview.png" alt="">
+        <img class="w-44" src="../../images/eu with you copy.png" alt="">
+        <img class="w-44" src="../../images/Seldi_Logo-removebg-preview.png" alt="">
+        <img class="w-44" src="../../images/MULTUS_final_Artboard_11_copy_2-removebg-preview.png" alt="">
+      </div>
+      <div class="max-w-7xl mx-auto px-4 py-4 border-t border-gray-700 text-center text-sm">
+        <p>© 2025 Multus. All rights reserved.</p>
+      </div>
+    </footer>
 
     <PublishWarning v-if="showPublishWarning" @proceed="submitWithoutPublishing" @allow="allowPublishing" />
 
     <ConsentWarning v-if="showConsentWarning" @accept="acceptConsent" />
+    <PrivacyPolicyModal v-if="showPrivacyPolicy" @close="showPrivacyPolicy = false" />
 
   </div>
 </template>
@@ -251,6 +282,7 @@ import { Link, useForm } from '@inertiajs/vue3'
 import { ref } from 'vue'
 import PublishWarning from '@/Pages/PublishWarning.vue'
 import ConsentWarning from '@/Pages/ConsentWarning.vue'
+import PrivacyPolicyModal from '@/Pages/PrivacyPolicyModal.vue'
 
 const props = defineProps({
   municipalities: Array,
@@ -258,6 +290,9 @@ const props = defineProps({
   goods: Array,
   reasons: Array,
 })
+
+const showPrivacyPolicy = ref(false)
+
 
 const form = useForm({
   municipality_id: null,
