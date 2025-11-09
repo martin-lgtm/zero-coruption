@@ -26,7 +26,7 @@
                 <nav class="hidden sm:flex gap-6 text-sm font-medium">
                     <Link :href="route('map')" class="hover:text-yellow-400 transition">Мапа</Link>
                     <Link :href="route('about')" class="hover:text-yellow-400 transition">За нас</Link>
-                    <Link href="/report" class="hover:text-yellow-400 transition">Пријави корупција</Link>
+                    <Link href="/report" class="hover:text-yellow-400 transition">Сподели приказна</Link>
                 </nav>
             </div>
 
@@ -34,7 +34,7 @@
             <div v-if="isOpen" class="sm:hidden px-4 pb-4 space-y-2">
                 <Link :href="route('map')" class="block hover:text-yellow-400 transition">Мапа</Link>
                 <Link :href="route('about')" class="block hover:text-yellow-400 transition">За нас</Link>
-                <Link href="/report" class="block hover:text-yellow-400 transition">Пријави корупција</Link>
+                <Link href="/report" class="block hover:text-yellow-400 transition">Сподели приказна</Link>
             </div>
         </header>
 

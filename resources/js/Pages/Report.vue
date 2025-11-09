@@ -7,11 +7,29 @@
           <img src="../../images/multus.png" class="w-12 sm:w-14" alt="Multus Logo" />
           <h1 class="text-lg sm:text-xl font-bold tracking-wide">Multus</h1>
         </div>
+
+        <button @click="isOpen = !isOpen"
+          class="sm:hidden focus:outline-none focus:ring-2 focus:ring-yellow-400 rounded">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-7 w-7" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <!-- burger -->
+            <path v-if="!isOpen" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+              d="M4 6h16M4 12h16M4 18h16" />
+            <!-- X -->
+            <path v-else stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+          </svg>
+        </button>
+
         <nav class="hidden sm:flex gap-6 text-sm font-medium">
           <Link :href="route('map')" class="hover:text-yellow-400 transition">Мапа</Link>
           <Link :href="route('about')" class="hover:text-yellow-400 transition">За нас</Link>
-          <Link :href="route('report.create')" class="hover:text-yellow-400 transition">Пријави корупција</Link>
+          <Link :href="route('report.create')" class="hover:text-yellow-400 transition">Сподели приказна</Link>
         </nav>
+      </div>
+
+      <div v-if="isOpen" class="sm:hidden px-4 pb-4 space-y-2">
+        <Link :href="route('map')" class="block hover:text-yellow-400 transition">Мапа</Link>
+        <Link :href="route('about')" class="block hover:text-yellow-400 transition">За нас</Link>
+        <Link :href="route('report.create')" class="block hover:text-yellow-400 transition">Сподели приказна</Link>
       </div>
     </header>
 
@@ -286,6 +304,7 @@ const props = defineProps({
 
 const showPrivacyPolicy = ref(false)
 
+const isOpen = ref(false)   
 
 const form = useForm({
   municipality_id: null,
