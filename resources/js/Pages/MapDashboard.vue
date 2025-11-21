@@ -29,16 +29,51 @@
         <Link href="/report" class="block hover:text-yellow-400 transition">Сподели приказна</Link>
       </div>
     </header>
+    <div class="bg-white rounded-lg mt-6 mx-4 sm:mx-6 md:mx-12 lg:mx-20 p-4 sm:p-6 md:p-8 shadow">
+      <h1 class="text-xl sm:text-2xl md:text-3xl font-extrabold text-gray-800 text-center leading-tight">
+        Споделени искуства поврзани со корупција во Југоисточниот регион
+      </h1>
+
+      <p class="mt-4 text-gray-700 text-sm sm:text-base leading-relaxed text-justify overflow-hidden transition-all duration-300"
+        :class="{
+          'max-h-32': !showFullText && isMobileOrTablet,
+          'max-h-[2000px]': showFullText
+        }">
+        Оваа веб страна е визуелен приказ на вистински искуства кои ги споделиле
+        граѓани од Југоисточниот регион со организацијата, а се поврзани со поткуп и
+        коруптивни дејствија. Интерактивната мапа покажува од кои општини доаѓаат
+        искуствата, а од десната страна се гледаат бројките изразени во проценти – по
+        сектор, добра користени за поткуп, годишни групи и така натаму. Анкетата со која
+        се собираа искуствата е целосно анонимна и веб страната не собира лични
+        податоци, ниту за локација на споделеното искуство, освен онаа локација за која
+        граѓанинот споделил дека таму се одвивало коруптивното дејство.
+        Ова е дигитална архива на приказни, а методот се вика Банка на приказни. Банка
+        на приказни е алатка за собирање и складирање лични искуства на одредена
+        тема, во случајот корупција, за да им даде колективна сила, глас и приказ. (ѕирни
+        <a class="text-blue-700 underline" target="_blank"
+          href="https://youtube.com/shorts/5O9N9boA-GY?si=lYpKHYEmqrpvAH7L">тука</a>
+        за кратко објаснувачко видео за тоа што е Банка на приказни)
+      </p>
+
+      <div v-if="isMobileOrTablet" class="mt-3 text-center">
+        <button @click="showFullText = !showFullText" class="text-blue-700 font-semibold text-sm">
+          {{ showFullText ? 'Скриј' : 'Прочитај повеќе' }}
+        </button>
+      </div>
+    </div>
+
 
     <main class="flex px-4 py-6 lg:py-10">
       <div class="flex flex-col lg:flex-row gap-6 lg:gap-8 w-full">
-        <div class="bg-white rounded-xl shadow-lg border w-full lg:w-[50%] sm:h-[75vh] h-[53vh]">
+        <div class="bg-white rounded-xl shadow-lg border w-full lg:w-[50%] sm:h-[80vh] h-[60vh]">
           <div class="p-3">
             <div id="mk-map" class="h-[40vh] sm:h-[50vh] lg:h-[66vh] rounded-lg border"></div>
 
             <div class="mt-3 px-2">
-              <div class="text-xs text-gray-500 font-medium mb-1">Легенда (вкупно случаи)</div>
-              <div class="flex flex-wrap items-center gap-3 text-xs">
+              <div class="text-xs text-gray-500 font-medium">Легенда - Интензитетот на боите го
+                покажува интензитетот на споделени лични искуства по општина. Проектот
+                се спроведуваше само во Југоисточниот регион.</div>
+              <div class="flex flex-wrap items-center gap-3 text-xs mt-4">
                 <span class="inline-flex items-center gap-1"><span class="inline-block w-4 h-4 rounded"
                     style="background:#eef2ff"></span> 0</span>
                 <span class="inline-flex items-center gap-1"><span class="inline-block w-4 h-4 rounded"
@@ -58,15 +93,17 @@
 
         <div class="flex-1 flex flex-col space-y-6">
           <div class="text-center">
-            <h2 class="text-2xl sm:text-3xl font-extrabold text-gray-800">Случаи на корупција по општини</h2>
-            <p class="text-gray-500 text-sm">Визуелизација на податоците по региони и сектори</p>
+            <h2 class="text-2xl sm:text-3xl font-extrabold text-gray-800">Визуелизација на собраните податоци по
+              региони, сектори и други податоци.</h2>
+            <p class="text-gray-500 text-sm">Поминете со курсорот врз процентите за да видите што тие изразуваат.</p>
           </div>
 
           <div v-if="hasData" class="bg-white rounded-xl border p-4 space-y-4">
             <div v-if="activeCard" class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
               <h3 class="text-lg sm:text-xl font-bold text-gray-800">{{ activeCard.name }}</h3>
               <div class="text-sm text-gray-600">
-                Вкупно случаи: <span class="font-semibold text-gray-900">{{ formatNumber(activeCard.total) }}</span>
+                Вкупно случаи: <span class="font-semibold text-gray-900 mt-4">{{ formatNumber(activeCard.total)
+                }}</span>
               </div>
             </div>
 
@@ -83,6 +120,12 @@
               <div class="rounded-xl border p-3 flex items-center justify-center h-[260px]">
                 <div ref="pieAgeEl" class="w-full h-full"></div>
               </div>
+
+
+              <div class="rounded-xl border p-3 flex items-center justify-center h-[260px]">
+                <div ref="pieAdminRankEl" class="w-full h-full"></div>
+              </div>
+
               <div class="rounded-xl border p-3 flex items-center justify-center h-[260px]">
                 <div ref="pieBribeRequestedEl" class="w-full h-full"></div>
               </div>
@@ -200,6 +243,9 @@ const pieAgeEl = ref(null)
 const pieBribeRequestedEl = ref(null)
 const pieBribeOfferedEl = ref(null)
 const pieWouldReportEl = ref(null)
+const pieAdminRankEl = ref(null)
+const showFullText = ref(false)
+const isMobileOrTablet = ref(window.innerWidth < 1024)
 
 
 const pies = {
@@ -210,11 +256,20 @@ const pies = {
   bribe_requested: null,
   bribe_offered: null,
   would_report: null,
+  admin_rank: null,
 }
 let map, geoLayer
 const page = usePage()
 const municipalities = computed(() => page.props.municipalities || [])
 const hasData = computed(() => Array.isArray(municipalities.value) && municipalities.value.length > 0)
+
+onMounted(() => {
+  const checkWidth = () => {
+    isMobileOrTablet.value = window.innerWidth < 1024
+  }
+
+  window.addEventListener('resize', checkWidth)
+})
 
 const corruptionData = computed(() => {
   const out = {}
@@ -223,7 +278,14 @@ const corruptionData = computed(() => {
       name: m.name,
       total: m.total || 0,
       comments: m.comments || [],
-      charts: m.charts || { sectors: {}, goods: {}, reasons: {}, ages: {}, would_report: {} },
+      charts: m.charts || { 
+        sectors: {}, 
+        goods: {}, 
+        reasons: {}, 
+        ages: {}, 
+        would_report: {},
+        admin_rank: {}, 
+      },
     }
   }
   return out
@@ -274,6 +336,7 @@ function refreshPies(code) {
     renderPie(pieBribeRequestedEl, 'bribe_requested', 'Побаран поткуп', rec.charts.bribe_requested)
     renderPie(pieBribeOfferedEl, 'bribe_offered', 'Понуден поткуп', rec.charts.bribe_offered)
     renderPie(pieWouldReportEl, 'would_report', 'Дали би пријавиле ако е безбедно?', rec.charts.would_report)
+    renderPie(pieAdminRankEl, 'admin_rank', 'Ранг на административниот службеник', rec.charts.admin_rank) // ⬅️ ADD THIS
 
   })
 }

@@ -50,6 +50,7 @@ class MapController extends Controller
                 'bribe_requested' => [],
                 'bribe_offered' => [],
                 'would_report'=>[],
+                'admin_rank'=>[],
             ],
             'comments' => [],
         ];
@@ -67,7 +68,7 @@ class MapController extends Controller
                     'charts' => [
                         'sectors' => [], 'goods' => [], 'reasons' => [],
                         'ages' => [], 'bribe_requested' => [], 'bribe_offered' => [],
-                        'would_report'=>[],
+                        'would_report'=>[], 'admin_rank'=>[],
                     ],
                     'comments' => [],
                 ];
@@ -147,6 +148,19 @@ class MapController extends Controller
 
     $attachCounts($payload, $byWouldReport, 'would_report', $muniKey);
 
+
+$byAdminRank = DB::table('reports')
+        ->join('municipalities', 'reports.municipality_id', '=', 'municipalities.id')
+        ->whereNotNull('reports.admin_rank')->where('reports.admin_rank', '!=', '')
+        ->select(
+            'municipalities.name as municipality_name',
+            'reports.admin_rank as label', // Use admin_rank as the label
+            DB::raw('COUNT(*) as total')
+        )
+        ->groupBy('municipalities.name', 'reports.admin_rank')
+        ->get();
+
+    $attachCounts($payload, $byAdminRank, 'admin_rank', $muniKey); // Use 'admin_rank' as the bucket name
 
     // 💬 Comments
 $comments = DB::table('reports')

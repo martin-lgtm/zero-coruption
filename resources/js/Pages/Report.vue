@@ -39,6 +39,13 @@
         Пријави ја твојата приказна
       </h2>
 
+      <p class="text-sm text-gray-600 mb-6">
+        Овде можеш да споделиш твое искуство со корупција или поткуп.
+        Замисли дека фукнционира како заедничка сметка во банка – ја депонираш
+        анонимно твојата приказна, а таа се собира со други такви и дава вредност за
+        сите.
+      </p>
+
       <div v-if="$page.props.flash?.success"
         class="mb-4 rounded-lg border border-green-200 bg-green-50 px-4 py-3 text-green-800">
         {{ $page.props.flash.success }}
@@ -79,11 +86,11 @@
           <label class="block text-sm font-medium text-gray-700 mb-1">Возраст</label>
           <select v-model="form.age_range" class="w-full rounded border-gray-300">
             <option :value="null" disabled>— Одбери возраст —</option>
-            <option value="18-25">18–24</option>
-            <option value="26-35">25–34</option>
-            <option value="36-45">35–44</option>
-            <option value="46-55">45–54</option>
-            <option value="65+">55+</option>
+            <option value="18-24">18–24</option>
+            <option value="25-34">25–34</option>
+            <option value="35-44">35–44</option>
+            <option value="45-54">45–54</option>
+            <option value="55+">55+</option>
           </select>
           <p v-if="form.errors.age_range" class="text-sm text-red-600 mt-1">
             {{ form.errors.age_range }}
@@ -304,7 +311,7 @@ const props = defineProps({
 
 const showPrivacyPolicy = ref(false)
 
-const isOpen = ref(false)   
+const isOpen = ref(false)
 
 const form = useForm({
   municipality_id: null,
