@@ -69,7 +69,7 @@ public function store(Request $request)
     $report->goods()->sync($validated['good_ids'] ?? []);
     $report->reasons()->sync($validated['reason_ids'] ?? []);
 
-    return back()->with('success', 'Пријавата е успешно поднесена!');
+    return redirect()->route('report.create')->with('success', 'Пријавата е успешно поднесена!');
 }
 
 
